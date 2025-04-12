@@ -8,49 +8,632 @@
     <meta name="description" content="EduTrack Pro - A comprehensive student management system for tracking student information, grades, and more.">
     <meta name="keywords" content="student management, education, grades, tracking, EduTrack Pro">
     <meta name="author" content="Lacle Julian Ajata Lauren">
-    <title>🎓 EduTrack Pro - Student Management</title>
-    <link rel="icon" href="favicon.png" type="image/x-icon" style="border-radius: 100%;">
+
+    <title>🎓 EduTrack Pro's - Student Management</title>
+
+    <link rel="icon" href="favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+        <link rel="stylesheet" href="style.css">
+
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0/dist/tf.min.js"></script>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <s-cript src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <link rel="stylesheet" href="STUD.css">
-    <script src="script.js" defer></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <script src="SideTads.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/pepjs@latest/dist/pep.min.js"></script>
+</head>
 
-    <style>
-        .glowing-logo {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            box-shadow: 0 0 10px #b0e5ff, 
-                        0 0 20px #0088ff, 
-                        0 0 30px #ffffff;
-            transition: box-shadow 0.3s ease;
-        }
-        .glowing-logo:hover {
-            box-shadow: 0 0 15px #00aaff, 
-                        0 0 25px #bed4e8, 
-                        0 0 35px #0066ff;
-        }
-    </style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduTrack Pro | Your Student Tracking Companion</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
 </head>
 <body>
-    <div class="header">
-        <img src="favicon.png" alt="EduTrack Pro's Logo" class="glowing-logo">
+  <!-- Name Prompt Screen -->
+  <div id="name-prompt" class="animate__animated animate__fadeIn">
+    <div class="prompt-container">
+      <div class="app-logo" aria-label="EduTrack Pro Logo">
+        <i class="fas fa-graduation-cap"></i>
+      </div>
+      <h1 class="prompt-title">Welcome to EduTrack Pro</h1>
+      <p class="prompt-subtitle">Your personalized student tracking companion</p>
+      
+      <div class="input-group">
+        <label for="name-input" class="visually-hidden">Please enter your name</label>
+        <input type="text" id="name-input" placeholder="Enter your name" autocomplete="name" autofocus aria-required="true">
+      </div>
+      
+      <button id="submit-name" class="btn-primary" aria-label="Lets begine yourr student tracking journey">
+        <span>Begin Your Journey</span>
+        <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading Screen -->
+  <div id="preloader" aria-hidden="true">
+    <div class="loader-container" role="alert" aria-live="polite">
+      <div class="book-loader" aria-label="Loading animation">
+        <div class="book-page" aria-hidden="true"></div>
+        <div class="book-page" aria-hidden="true"></div>
+        <div class="book-page" aria-hidden="true"></div>
+        <div class="book-page" aria-hidden="true"></div>
+      </div>
+      
+      <h2 class="greeting" id="user-greeting" aria-label="Personalized greeting"></h2>
+      
+      <div class="progress-container" aria-hidden="true">
+        <div class="progress-bar" id="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+      </div>
+      
+      <p id="loading-text" aria-label="Loading status">Preparing your personalized dashboard...</p>
+    </div>
+  </div>
+
+  <!-- Main App Content -->
+  <div id="app-content">
+    <h1 id="welcome-message"></h1>
+    
+    <div class="dashboard">
+      <div class="dashboard-card">
+        <h3 class="card-title">
+          <i class="fas fa-calendar-alt"></i>
+          Today's Schedule
+        </h3>
+        <div class="card-content" id="todays-schedule">
+          <div class="schedule-loading">
+            <div class="loading-bar" style="width: 70%"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="dashboard-card">
+        <h3 class="card-title">
+          <i class="fas fa-tasks"></i>
+          Upcoming Assignments
+        </h3>
+        <div class="card-content" id="upcoming-assignments">
+          <div class="assignment-loading">
+            <div class="loading-bar" style="width: 50%"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="dashboard-card">
+        <h3 class="card-title">
+          <i class="fas fa-chart-line"></i>
+          Learning Progress
+        </h3>
+        <div class="card-content" id="learning-progress">
+          <div class="progress-loading">
+            <div class="loading-bar" style="width: 30%"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="dashboard-card">
+        <h3 class="card-title">
+          <i class="fas fa-bolt"></i>
+          Quick Actions
+        </h3>
+        <div class="card-content">
+          <button class="quick-action" data-action="notes">
+            <i class="fas fa-edit"></i> Take Notes
+          </button>
+          <button class="quick-action" data-action="quiz">
+            <i class="fas fa-question-circle"></i> Start Quiz
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Enhanced initialization with better performance
+    document.addEventListener('DOMContentLoaded', function() {
+      const nameInput = document.getElementById('name-input');
+      const submitBtn = document.getElementById('submit-name');
+      
+      // Focus management with timeout for better mobile compatibility
+      setTimeout(() => {
+        nameInput.focus();
+      }, 300);
+      
+      // Check for previously entered name
+      const savedName = localStorage.getItem('edutrack_username');
+      if (savedName) {
+        nameInput.value = savedName;
+      }
+      
+      // Event listeners with debouncing
+      submitBtn.addEventListener('click', startApp);
+      nameInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') startApp();
+      });
+      
+      // Add ripple effect to button
+      submitBtn.addEventListener('click', function(e) {
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple';
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+        this.appendChild(ripple);
+        
+        setTimeout(() => {
+          ripple.remove();
+        }, 1000);
+      });
+    });
+
+    function startApp() {
+      const name = document.getElementById('name-input').value.trim();
+      
+      if (!name) {
+        // Enhanced empty input feedback
+        const input = document.getElementById('name-input');
+        input.style.borderColor = '#f72585';
+        input.setAttribute('aria-invalid', 'true');
+        
+        const animation = input.animate([
+          { transform: 'translateX(0)' },
+          { transform: 'translateX(-10px)' },
+          { transform: 'translateX(10px)' },
+          { transform: 'translateX(0)' }
+        ], {
+          duration: 400,
+          iterations: 2
+        });
+        
+        // Add error message
+        const errorMsg = document.createElement('div');
+        errorMsg.className = 'error-message';
+        errorMsg.textContent = 'Please enter your name to continue';
+        errorMsg.style.color = '#f72585';
+        errorMsg.style.marginTop = '0.5rem';
+        errorMsg.style.fontSize = '0.9rem';
+        
+        const inputGroup = document.querySelector('.input-group');
+        if (!document.querySelector('.error-message')) {
+          inputGroup.appendChild(errorMsg);
+        }
+        
+        return;
+      }
+      
+      // Save name with timestamp
+      localStorage.setItem('edutrack_username', name);
+      localStorage.setItem('edutrack_last_access', new Date().toISOString());
+      
+      // Animate transition to loading screen
+      const namePrompt = document.getElementById('name-prompt');
+      namePrompt.style.opacity = '0';
+      namePrompt.style.transform = 'translateY(-20px) scale(0.95)';
+      
+      setTimeout(() => {
+        namePrompt.style.display = 'none';
+        const preloader = document.getElementById('preloader');
+        preloader.style.display = 'flex';
+        
+        // Force reflow to enable opacity transition
+        void preloader.offsetWidth;
+        preloader.style.opacity = '1';
+        
+        // Set personalized greeting
+        setPersonalizedGreeting(name);
+        
+        // Start loading animation
+        simulateLoading(name);
+      }, 500);
+    }
+
+    function setPersonalizedGreeting(name) {
+      const lowerName = name.toLowerCase();
+      const greetingElement = document.getElementById('user-greeting');
+      const welcomeElement = document.getElementById('welcome-message');
+      
+      // Special name effects
+      const specialNames = {
+        'rugiatu': {
+          greeting: `Sup, Doc! <span class="heart">🩺</span>`,
+          color: 'linear-gradient(to right, #e70c3c, #ff6b6b)',
+          effect: createMedicalEffect
+        },
+        'favour': {
+          greeting: `Hey Baldly! 😁😂`,
+          color: 'linear-gradient(to right, #3498db, #74b9ff)',
+          effect: createLaughEffect
+        },
+        'ishu': {
+          greeting: `Look! It's the art student, The Extraordinary Ishu! aka Ishu the dancer 💃🏾 <span style="color: gold;">💃🏾</span>`,
+          color: 'linear-gradient(to right, #f39c12, #fdcb6e)',
+          effect: createDanceEffect
+        },
+        'zuriel': {
+          greeting: `Good day Mr composour king all heal king zuriel<span style="color: gold;">💰💴</span>`,
+          color: 'linear-gradient(to right, #f39c12, #fdcb6e)',
+          effect: createkingEffect
+        },
+    
+      };
+      
+      if (specialNames[lowerName]) {
+        const special = specialNames[lowerName];
+        greetingElement.innerHTML = special.greeting;
+        welcomeElement.innerHTML = special.greeting;
+        
+        greetingElement.style.textShadow = '0 2px 4px rgba(0,0,0,0.3)';
+        welcomeElement.style.backgroundImage = special.color;
+        
+        if (special.effect) {
+          special.effect();
+        }
+      } else {
+        greetingElement.textContent = `Welcome, ${name}! Preparing your learning space...`;
+        welcomeElement.textContent = `Ready to learn, ${name}?`;
+        welcomeElement.style.backgroundImage = 'linear-gradient(to right, var(--primary), var(--secondary))';
+      }
+    }
+
+    function simulateLoading(name) {
+      let progress = 0;
+      const progressBar = document.getElementById('progress-bar');
+      const loadingText = document.getElementById('loading-text');
+      
+      const loadingPhrases = [
+        "Organizing your courses...",
+        "Setting up your dashboard...",
+        "Preparing learning materials...",
+        "Analyzing your progress...",
+        "Almost there...",
+        "Just a moment...",
+        "Ready ?",
+        "Lets go !!!",
+      ];
+      
+      const interval = setInterval(() => {
+        progress += Math.random() * 10 + 5;
+        if (progress > 100) progress = 100;
+        
+        progressBar.style.width = `${progress}%`;
+        progressBar.setAttribute('aria-valuenow', progress);
+        
+        // Update loading text based on progress
+        const phraseIndex = Math.min(Math.floor(progress / 20), loadingPhrases.length - 1);
+        loadingText.textContent = loadingPhrases[phraseIndex];
+        
+        if (progress >= 100) {
+          clearInterval(interval);
+          completeLoading(name);
+        }
+      }, 300);
+    }
+
+    function completeLoading(name) {
+      setTimeout(() => {
+        const preloader = document.getElementById('preloader');
+        preloader.style.opacity = '0';
+        
+        setTimeout(() => {
+          preloader.style.display = 'none';
+          const appContent = document.getElementById('app-content');
+          appContent.style.display = 'block';
+          
+          // Animate welcome message
+          const welcomeMsg = document.getElementById('welcome-message');
+          welcomeMsg.style.opacity = '0';
+          welcomeMsg.style.transform = 'translateY(20px)';
+          welcomeMsg.style.transition = 'all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+          
+          setTimeout(() => {
+            welcomeMsg.style.opacity = '1';
+            welcomeMsg.style.transform = 'translateY(0)';
+          }, 100);
+          
+          // Load dashboard content
+          updateDashboard(name);
+        }, 500);
+      }, 800);
+    }
+
+    function updateDashboard(name) {
+      setTimeout(() => {
+        // Today's Schedule
+        const scheduleElement = document.getElementById('todays-schedule');
+        if (scheduleElement) {
+          scheduleElement.innerHTML = `
+            <div class="schedule-item">
+              <div class="schedule-time">08:00 - 09:30</div>
+              <div class="schedule-class">Mathematics</div>
+              <div class="schedule-location">Room 204</div>
+            </div>
+            <div class="schedule-item">
+              <div class="schedule-time">10:00 - 11:30</div>
+              <div class="schedule-class">History</div>
+              <div class="schedule-location">Room 112</div>
+            </div>
+          `;
+        }
+        
+        // Upcoming Assignments
+        const assignmentsElement = document.getElementById('upcoming-assignments');
+        if (assignmentsElement) {
+          assignmentsElement.innerHTML = `
+            <div class="assignment-item urgent">
+              <div class="assignment-title">Science Project</div>
+              <div class="assignment-due">Due Tomorrow</div>
+            </div>
+            <div class="assignment-item">
+              <div class="assignment-title">Math Quiz</div>
+              <div class="assignment-due">Friday</div>
+            </div>
+          `;
+        }
+        
+        // Learning Progress
+        const progressElement = document.getElementById('learning-progress');
+        if (progressElement) {
+          progressElement.innerHTML = `
+            <div class="progress-item">
+              <div class="progress-subject">Mathematics</div>
+              <progress value="85" max="100"></progress>
+              <div class="progress-percent">85%</div>
+            </div>
+            <div class="progress-item">
+              <div class="progress-subject">History</div>
+              <progress value="72" max="100"></progress>
+              <div class="progress-percent">72%</div>
+            </div>
+          `;
+        }
+        
+        // Quick Actions
+        document.querySelectorAll('.quick-action').forEach(button => {
+          button.addEventListener('click', function() {
+            const action = this.getAttribute('data-action');
+            handleQuickAction(action, name);
+          });
+        });
+      }, 1000);
+    }
+
+    function handleQuickAction(action, name) {
+      const actions = {
+        'notes': () => {
+          alert(`${name}, let's take some notes!`);
+          // In a real app, this would open a notes modal
+        },
+        'quiz': () => {
+          alert(`${name},  Set quiz for your students!`);
+          // In a real app, this would start a quiz flow
+        }
+      };
+      
+      if (actions[action]) {
+        actions[action]();
+      }
+    }
+
+    function createMedicalEffect() {
+  // Create medical-themed animation with brighter effects
+  const colors = ['#FF0000', '#00FF00', '#FFFF00', '#00FFFF', '#FF00FF', '#FFFFFF'];
+  const glowIntensity = '0 0 10px';
+
+  for (let i = 0; i < 30; i++) { // Increased number of elements
+    setTimeout(() => {
+      const symbol = document.createElement('div');
+      const symbols = ['❤️', '🩺', '💊', '🩹', '🧪', '🔬', '😷', '🏥', '🚑' ,'👑' , '💎'];
+      const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+      
+      symbol.textContent = randomSymbol;
+      symbol.style.position = 'fixed';
+      symbol.style.fontSize = `${Math.random() * 30 + 20}px`; // Larger size
+      symbol.style.left = `${Math.random() * 100}vw`;
+      symbol.style.top = '-50px';
+      symbol.style.opacity = '0';
+      symbol.style.zIndex = '1000';
+      symbol.style.filter = `drop-shadow(${glowIntensity} ${randomColor})`;
+      symbol.style.textShadow = `0 0 15px ${randomColor}`;
+      symbol.style.willChange = 'transform, opacity';
+      
+      // Add slight rotation for variety
+      const rotation = Math.random() * 60 - 30; // -30 to 30 degrees
+      symbol.style.transform = `rotate(${rotation}deg)`;
+      
+      document.body.appendChild(symbol);
+
+      // Fade in with glow
+      setTimeout(() => {
+        symbol.style.opacity = '1';
+        symbol.style.transition = 'all 4s cubic-bezier(0.25, 1, 0.5, 1)';
+        symbol.style.top = `${window.innerHeight + 50}px`;
+        
+        // Add pulsing animation
+        symbol.animate([
+          { filter: `drop-shadow(${glowIntensity} ${randomColor})` },
+          { filter: `drop-shadow(0 0 20px ${randomColor})` },
+          { filter: `drop-shadow(${glowIntensity} ${randomColor})` }
+        ], {
+          duration: 1500,
+          iterations: Infinity
+        });
+      }, 50);
+
+      // Remove after animation completes
+      setTimeout(() => {
+        symbol.style.opacity = '0';
+        setTimeout(() => {
+          symbol.remove();
+        }, 1000);
+      }, 4000);
+      
+      // Add floating motion
+      const floatDistance = Math.random() * 200 - 100; // -100px to 100px
+      symbol.animate([
+        { transform: `translateX(0) rotate(${rotation}deg)` },
+        { transform: `translateX(${floatDistance}px) rotate(${rotation + 10}deg)` }
+      ], {
+        duration: 4000,
+        fill: 'forwards',
+        easing: 'ease-in-out'
+      });
+      
+    }, i * 200); // Faster spawn rate
+  }
+
+  // Add background pulse effect
+  const pulse = document.createElement('div');
+  pulse.style.position = 'fixed';
+  pulse.style.top = '0';
+  pulse.style.left = '0';
+  pulse.style.width = '100%';
+  pulse.style.height = '100%';
+  pulse.style.background = 'radial-gradient(circle, rgba(255,0,0,0.1) 0%, rgba(0,0,0,0) 70%)';
+  pulse.style.zIndex = '999';
+  pulse.style.pointerEvents = 'none';
+  document.body.appendChild(pulse);
+
+  // Animate pulse
+  pulse.animate([
+    { opacity: 0, transform: 'scale(0.5)' },
+    { opacity: 0.3, transform: 'scale(1.5)' },
+    { opacity: 0, transform: 'scale(2.5)' }
+  ], {
+    duration: 3000,
+    iterations: 2
+  });
+
+  // Remove pulse after animation
+  setTimeout(() => {
+    pulse.remove();
+  }, 6000);
+}
+
+    function createLaughEffect() {
+      for (let i = 0; i < 15; i++) {
+        setTimeout(() => {
+          const emoji = document.createElement('div');
+          emoji.textContent = Math.random() > 0.5 ? '😁' : '😂';
+          emoji.style.position = 'fixed';
+          emoji.style.fontSize = `${Math.random() * 40 + 20}px`;
+          emoji.style.left = `${Math.random() * 100}%`;
+          emoji.style.top = `${Math.random() * 100}%`;
+          emoji.style.opacity = '0';
+          emoji.style.transform = 'scale(0)';
+          emoji.style.zIndex = '1000';
+          document.body.appendChild(emoji);
+
+          setTimeout(() => {
+            emoji.style.opacity = '0.8';
+            emoji.style.transform = 'scale(1.2)';
+            emoji.style.transition = 'all 1s ease-out';
+          }, 50);
+
+          setTimeout(() => {
+            emoji.style.opacity = '0';
+            setTimeout(() => {
+              emoji.remove();
+            }, 1000);
+          }, 2000);
+        }, i * 200);
+      }
+    }
+
+    function createDanceEffect() {
+      for (let i = 0; i < 10; i++) {
+        setTimeout(() => {
+          const dancer = document.createElement('div');
+          dancer.textContent = '💃🏾';
+          dancer.style.position = 'fixed';
+          dancer.style.fontSize = '40px';
+          dancer.style.left = `${Math.random() * 100}%`;
+          dancer.style.top = `${Math.random() * 100}%`;
+          dancer.style.opacity = '0';
+          dancer.style.transform = 'scale(0)';
+          dancer.style.zIndex = '1000';
+          document.body.appendChild(dancer);
+
+          setTimeout(() => {
+            dancer.style.opacity = '0.9';
+            dancer.style.transform = 'scale(1)';
+            dancer.style.transition = 'all 0.5s ease-out';
+            
+            // Dance animation
+            dancer.animate([
+              { transform: 'rotate(0deg)' },
+              { transform: 'rotate(10deg)' },
+              { transform: 'rotate(-10deg)' },
+              { transform: 'rotate(0deg)' }
+            ], {
+              duration: 1000,
+              iterations: Infinity
+            });
+          }, 50);
+
+          setTimeout(() => {
+            dancer.style.opacity = '0';
+            setTimeout(() => {
+              dancer.remove();
+            }, 1000);
+          }, 5000);
+        }, i * 500);
+      }
+    }
+
+    function createkingEffect() {
+      for (let i = 0; i < 15; i++) {
+        setTimeout(() => {
+          const king = document.createElement('div');
+          king.textContent = Math.random() > 0.5 ? (Math.random() > 0.5 ? '👑' : '💎') : (Math.random() > 0.5 ? '💵' : '💰');
+          king.style.position = 'fixed';
+          king.style.fontSize = `${Math.random() * 40 + 20}px`;
+          king.style.left = `${Math.random() * 100}%`;
+          king.style.top = `${Math.random() * 100}%`;
+          king.style.opacity = '0';
+          king.style.transform = 'scale(0)';
+          king.style.zIndex = '1000';
+          document.body.appendChild(king);
+
+          setTimeout(() => {
+            king.style.opacity = '0.8';
+            king.style.transform = 'scale(1.2)';
+            king.style.transition = 'all 1s ease-out';
+          }, 50);
+
+          setTimeout(() => {
+            king.style.opacity = '0';
+            setTimeout(() => {
+                king.remove();
+            }, 1000);
+          }, 2000);
+        }, i * 200);
+      }
+    }
+  </script>
+</body>
+</html>
+
+
+<body>
+    <div style="width: 100px; height: 60px; border-radius: 50%; background: linear-gradient(45deg, #ff6ec4, #7873f5,  rgb(3, 197, 250)); box-shadow: 0 0 15px rgba(120, 115, 245, 0.8); display: flex; align-items: center; justify-content: center; font-size: 12px; color: white; font-weight: bold; text-transform: uppercase;">
+        Sup (⌐■_■)
     </div>
     <div class="container">
-</head>
-
-
-    <body>
         <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
             <i class="fas fa-moon"></i> Dark Mode
         </button>
         <div class="container">
-            <h1><i class="fas fa-graduation-cap"></i> EduTrack Pro</h1>
+            <h1><i class="fas fa-graduation-cap"></i> EduTrack Pro's</h1>
             <div id="authContainer" class="auth-container">
                 <h1> 📖🧑‍🎓StudTrac📚 Pro</h1>
                 <div class="signin-card">
@@ -65,19 +648,477 @@
                 <button onclick="signOut()" class="signout-btn">Sign Out</button>
                 <!-- Rest of existing HTML -->
             </div>
+    <!-- Modern Tab Navigation System -->
+<div class="tab-system">
+    <div class="tab-container">
+      <div class="tab-scroller">
+        <div class="tab active" data-tab="dashboard" role="tab" aria-selected="true">
+          <i class="fas fa-tachometer-alt"></i>
+          <span class="tab-text">Dashboard</span>
+          <span class="tab-emoji">📈📉</span>
+        </div>
+        <div class="tab" data-tab="add" role="tab" aria-selected="false">
+          <i class="fas fa-user-plus"></i>
+          <span class="tab-text">Add Student</span>
+          <span class="tab-emoji">➕🧑🎓</span>
+        </div>
+        <div class="tab" data-tab="search" role="tab" aria-selected="false">
+          <i class="fas fa-search"></i>
+          <span class="tab-text">Search</span>
+          <span class="tab-emoji">🔍</span>
+        </div>
+        <div class="tab" data-tab="view" role="tab" aria-selected="false">
+          <i class="fas fa-users"></i>
+          <span class="tab-text">View All</span>
+          <span class="tab-emoji">👁️</span>
+        </div>
+        <div class="tab" data-tab="attendance" role="tab" aria-selected="false">
+          <i class="fas fa-calendar-check"></i>
+          <span class="tab-text">Attendance</span>
+          <span class="tab-emoji">📅</span>
+        </div>
+        <div class="tab" data-tab="analytics" role="tab" aria-selected="false">
+          <i class="fas fa-chart-bar"></i>
+          <span class="tab-text">Analytics</span>
+          <span class="tab-emoji">📊</span>
+        </div>
+        <div class="tab" data-tab="backup" role="tab" aria-selected="false">
+          <i class="fas fa-database"></i>
+          <span class="tab-text">Backup</span>
+          <span class="tab-emoji">💾</span>
+        </div>
+        <div class="tab" data-tab="calculator" role="tab" aria-selected="false">
+          <i class="fas fa-calculator"></i>
+          <span class="tab-text">Calculator</span>
+          <span class="tab-emoji">🧮</span>
+        </div>
+        <div class="tab" data-tab="help" role="tab" aria-selected="false">
+          <i class="fas fa-question-circle"></i>
+          <span class="tab-text">Help</span>
+          <span class="tab-emoji">❓</span>
+        </div>
+      </div>
+    </div>
+    <button class="scroll-btn left" aria-label="Scroll tabs left">‹</button>
+    <button class="scroll-btn right" aria-label="Scroll tabs right">›</button>
+    <div class="tab-dropdown">
+      <button class="dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+        <i class="fas fa-ellipsis-h"></i>
+        <span>More</span>
+      </button>
+      <div class="dropdown-menu" role="menu"></div>
+    </div>
+  </div>
+  
+  <style>
+  /* ===== MODERN TAB SYSTEM ===== */
+  :root {
+    --tab-bg: rgba(255, 255, 255, 0.9);
+    --tab-text: #2d3748;
+    --tab-active-bg: #3a86ff;
+    --tab-active-text: white;
+    --tab-hover: rgba(0, 0, 0, 0.05);
+    --border-color: rgba(0, 0, 0, 0.1);
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --tab-bg: rgba(30, 30, 30, 0.9);
+      --tab-text: #f8f9fa;
+      --tab-hover: rgba(255, 255, 255, 0.1);
+      --border-color: rgba(255, 255, 255, 0.15);
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+  }
+  
+  .tab-system {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  
+  .tab-container {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .tab-scroller {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    gap: 4px;
+    padding: 8px 0;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .tab-scroller::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .tab {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: var(--tab-bg);
+    color: var(--tab-text);
+    cursor: pointer;
+    scroll-snap-align: start;
+    transition: var(--transition);
+    border: 1px solid var(--border-color);
+    font-size: 14px;
+    position: relative;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  
+  .tab i {
+    margin-right: 8px;
+    font-size: 16px;
+  }
+  
+  .tab-emoji {
+    margin-left: 6px;
+  }
+  
+  .tab.active {
+    background: var(--tab-active-bg);
+    color: var(--tab-active-text);
+    box-shadow: var(--shadow);
+  }
+  
+  .tab:hover:not(.active) {
+    background: var(--tab-hover);
+  }
+  
+  .tab:focus-visible {
+    outline: 2px solid var(--tab-active-bg);
+    outline-offset: 2px;
+  }
+  
+  /* Scroll buttons */
+  .scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--tab-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    z-index: 2;
+    cursor: pointer;
+    display: none;
+    opacity: 0;
+    transition: var(--transition);
+  }
+  
+  .scroll-btn.left {
+    left: -16px;
+  }
+  
+  .scroll-btn.right {
+    right: -16px;
+  }
+  
+  .tab-system:hover .scroll-btn {
+    opacity: 1;
+  }
+  
+  /* Dropdown for overflow */
+  .tab-dropdown {
+    position: relative;
+    flex-shrink: 0;
+    margin-left: 4px;
+  }
+  
+  .dropdown-toggle {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: var(--tab-bg);
+    color: var(--tab-text);
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+  }
+  
+  .dropdown-toggle:hover {
+    background: var(--tab-hover);
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    min-width: 180px;
+    background: var(--tab-bg);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    padding: 8px;
+    z-index: 100;
+    opacity: 0;
+    transform: translateY(-10px);
+    visibility: hidden;
+    transition: var(--transition);
+    border: 1px solid var(--border-color);
+  }
+  
+  .dropdown-menu.show {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+  }
+  
+  /* Responsive adaptations */
+  @media (max-width: 1024px) {
+    .scroll-btn {
+      display: block;
+    }
     
-            <!-- Tabs Navigation -->
-            <div class="tab-container">
-                <div class="tab active" onclick="showTab('dashboard')"><i class="fas fa-tachometer-alt"></i>Dashboard 📈📉</div>
-                <div class="tab" onclick="showTab('add')"><i class="fas fa-user-plus"></i> Add Student ➕🧑‍🎓👩🏾‍🎓</div>
-                <div class="tab" onclick="showTab('search')"><i class="fas fa-search"></i>Search 🔍👥</div>
-                <div class="tab" onclick="showTab('view')"><i class="fas fa-users"></i>View All 👁️📈</div>
-                <div class="tab" onclick="showTab('attendance')"><i class="fas fa-calendar-check"></i> Attendance 🔥📅👥 </div>
-                <div class="tab" onclick="showTab('analytics')"><i class="fas fa-chart-bar"></i> Analytics 📊🔥</div>
-                <div class="tab" onclick="showTab('backup')"><i class="fas fa-database"></i>Backup 💾📦 </div>
-                <div class="tab" onclick="showTab('calculator')"><i class="fas fa-calculator"></i> Calculator 🧮⚡</div>
-                <div class="tab" onclick="showTab('help')"><i class="fas fa-question-circle"></i> Help❓💡🔧</div>
-            </div>
+    .tab {
+      padding: 8px 12px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .tab-text {
+      display: none;
+    }
+    
+    .tab i {
+      margin-right: 0;
+    }
+    
+    .tab-emoji {
+      display: none;
+    }
+    
+    .dropdown-toggle span {
+      display: none;
+    }
+  }
+  
+  /* Animation */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SCROLLING SCREEN */
+.tab-scroller {
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.tab-scroller:active {
+  cursor: grabbing;
+}
+
+/* Smooth transition when releasing swipe */
+.tab-scroller {
+  scroll-behavior: smooth;
+  transition: scroll-left 0.3s ease-out;
+}
+
+/* Prevent image/emoji drag interference */
+.tab-scroller img, .tab-emoji {
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+/* Enhanced touch feedback */
+@media (hover: none) {
+  .tab {
+    padding: 12px 16px; /* Larger touch targets */
+  }
+  
+  .tab:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+}
+
+  </style>
+  
+  <script>
+  // Enhanced Tab Functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const tabSystem = document.querySelector('.tab-system');
+    const scroller = tabSystem.querySelector('.tab-scroller');
+    const tabs = tabSystem.querySelectorAll('.tab');
+    const scrollLeft = tabSystem.querySelector('.scroll-btn.left');
+    const scrollRight = tabSystem.querySelector('.scroll-btn.right');
+    const dropdownToggle = tabSystem.querySelector('.dropdown-toggle');
+    const dropdownMenu = tabSystem.querySelector('.dropdown-menu');
+  
+    // Tab switching
+    tabs.forEach(tab => {
+      tab.addEventListener('click', function() {
+        const tabId = this.getAttribute('data-tab');
+        showTab(tabId);
+        
+        // Update active state
+        tabs.forEach(t => {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        this.classList.add('active');
+        this.setAttribute('aria-selected', 'true');
+        
+        // Scroll to tab
+        this.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'center'
+        });
+      });
+    });
+  
+    // Scroll buttons
+    scrollLeft?.addEventListener('click', () => {
+      scroller.scrollBy({ left: -200, behavior: 'smooth' });
+    });
+    
+    scrollRight?.addEventListener('click', () => {
+      scroller.scrollBy({ left: 200, behavior: 'smooth' });
+    });
+  
+    // Dropdown functionality
+    dropdownToggle?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isExpanded = dropdownToggle.getAttribute('aria-expanded') === 'true';
+      dropdownToggle.setAttribute('aria-expanded', !isExpanded);
+      dropdownMenu.classList.toggle('show', !isExpanded);
+    });
+  
+    // Close dropdown when clicking outside
+    document.addEventListener('click', () => {
+      dropdownToggle?.setAttribute('aria-expanded', 'false');
+      dropdownMenu?.classList.remove('show');
+    });
+  
+    // Dynamic dropdown content based on overflow
+    function updateDropdown() {
+      if (!dropdownMenu) return;
+      
+      dropdownMenu.innerHTML = '';
+      const containerWidth = tabSystem.offsetWidth;
+      let totalWidth = 0;
+      let hiddenTabs = [];
+      
+      tabs.forEach(tab => {
+        totalWidth += tab.offsetWidth + 4; // Include gap
+        if (totalWidth > containerWidth) {
+          hiddenTabs.push(tab.cloneNode(true));
+        }
+      });
+      
+      if (hiddenTabs.length > 0) {
+        hiddenTabs.forEach(tab => {
+          tab.classList.remove('active');
+          dropdownMenu.appendChild(tab);
+        });
+        dropdownToggle.style.display = 'flex';
+      } else {
+        dropdownToggle.style.display = 'none';
+      }
+    }
+  
+    // Initial setup
+    updateDropdown();
+    window.addEventListener('resize', updateDropdown);
+  });
+  
+  // Your existing function
+  function showTab(tabId) {
+    // Your tab content switching logic here
+    console.log(`Showing tab: ${tabId}`);
+  }
+
+
+  //NEW
+  function setupSwipeGestures() {
+  const scroller = document.getElementById('tabScroller');
+  let startX = 0;
+  let isDragging = false;
+  let startScrollLeft = 0;
+
+  // Touch events
+  scroller.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].pageX;
+    startScrollLeft = scroller.scrollLeft;
+    isDragging = true;
+    scroller.style.scrollBehavior = 'auto'; // Disable smooth scroll during drag
+  });
+
+  scroller.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    const x = e.touches[0].pageX;
+    const walk = (x - startX) * 1.5; // Scroll multiplier
+    scroller.scrollLeft = startScrollLeft - walk;
+  });
+
+  scroller.addEventListener('touchend', () => {
+    isDragging = false;
+    scroller.style.scrollBehavior = 'smooth'; // Re-enable smooth scroll
+  });
+
+  // Mouse drag for desktop touchscreens
+  scroller.addEventListener('mousedown', (e) => {
+    if (window.innerWidth > 768) return; // Only on mobile views
+    startX = e.pageX;
+    startScrollLeft = scroller.scrollLeft;
+    isDragging = true;
+    scroller.style.cursor = 'grabbing';
+    scroller.style.scrollBehavior = 'auto';
+    e.preventDefault(); // Prevent text selection
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    const x = e.pageX;
+    const walk = (x - startX) * 2;
+    scroller.scrollLeft = startScrollLeft - walk;
+  });
+
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+    scroller.style.cursor = 'grab';
+    scroller.style.scrollBehavior = 'smooth';
+  });
+}
+
+// Add this to your DOMContentLoaded event
+document.addEventListener('DOMContentLoaded', function() {
+  // Your existing setup...
+  setupSwipeGestures();
+  
+  // Add cursor style for desktop hover
+  const scroller = document.querySelector('.tab-scroller');
+  if (window.innerWidth > 768) {
+    scroller.style.cursor = 'grab';
+    scroller.addEventListener('mouseenter', () => {
+      scroller.style.cursor = 'grab';
+    });
+    scroller.addEventListener('mouseleave', () => {
+      scroller.style.cursor = 'default';
+    });
+  }
+});
+  </script>
     
             <!-- Dashboard Tab -->
             <div id="dashboard" class="tab-content active">
@@ -364,6 +1405,8 @@
                             <div class="gpa-calculator">
                                 <h3><i class="fas fa-calculator"></i> GPA Calculator</h3>
                                 <div id="gpaSubjects">
+
+
                                     <!-- Subjects will be added here -->
                                 </div>
                                 <button onclick="addGpaSubject()"><i class="fas fa-plus"></i> Add Subject</button>
@@ -381,6 +1424,7 @@
                 </div>
             </div>
     
+
             <!-- Help Tab -->
             <div id="help" class="tab-content section">
                 <h2><i class="fas fa-question-circle"></i> EduTrack Pro Help Center</h2>
@@ -661,11 +1705,13 @@
                 </div>
             </div>
         </div>
-    
+
         <footer>
-            <p>&copy; <span id="year"></span> <i class="fas fa-graduation-cap"></i> EduTrack Pro - Student Management. All rights reserved.</p>
+            <p>&copy; <span id="year"></span> <i class="fas fa-graduation-cap"></i> EduTrack Pro's - Student Management. All rights reserved.</p>
             <p>Version 2.0.0</p>
+            <p>Created by <strong>Lacle Julian Ajata Lauren</strong></p>
         </footer>
+    
     
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
@@ -1410,10 +2456,13 @@
                 }
             }
     
+ 
+
+/*******  570b0004-d024-40da-978e-073ba291ca4f  *******/
             function printStudentReport(studentName) {
                 // This would be implemented with a print-specific stylesheet
                 // and potentially generating a PDF or printable HTML page
-                showNotification('Print feature coming soon!', 'info');
+                showNotification('Sorry but Printing  featurevalable now but its coming soon!', 'info');
             }
     
             function viewAllStudents() {
@@ -1455,7 +2504,7 @@
                     allStudentsDiv.innerHTML = `<div class="notification info">No students in ${group} program</div>`;
                     return;
                 }
-    
+    //THIS IS THE MAPPING FOR ALL THE STUDENT DIV .INNERHTML//
                 allStudentsDiv.innerHTML = filtered.map((student, index) => `
                     <div class="student-card">
                         ${student.photoUrl ? `<img src="${student.photoUrl}" alt="${student.name}" class="student-photo">` : ''}
@@ -2399,4 +3448,5 @@
             }
         </script>
     </body>
-    </html>
+   
+</html>
